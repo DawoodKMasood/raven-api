@@ -35,8 +35,9 @@ async def auth_mycase():
         "state": "some-random-state"  # In production, use secure random state
     }
     
-    redirect_url = httpx.URL(MYCASE_AUTH_URL).include_query_params(**auth_params)
-    return RedirectResponse(url=str(redirect_url))
+    params = "&".join(f"{key}={value}" for key, value in auth_params.items())
+    redirect_url = f"{MYCASE_AUTH_URL}?{params}"
+    return RedirectResponse(url=redirect_url)
 
 @app.get("/auth/mycase/callback")
 async def auth_callback(code: str, state: Optional[str] = None):
